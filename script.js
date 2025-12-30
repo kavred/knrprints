@@ -123,6 +123,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// 3. Mobile Menu Logic
+const hamburger = document.querySelector('.hamburger');
+const mobileOverlay = document.querySelector('.mobile-nav-overlay');
+const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-cta');
+
+if (hamburger && mobileOverlay) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+        document.body.style.overflow = mobileOverlay.classList.contains('active') ? 'hidden' : 'auto';
+    });
+
+    // Close when link clicked
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    });
+
+    // Close if clicked outside (on overlay)
+    mobileOverlay.addEventListener('click', (e) => {
+        if (e.target === mobileOverlay) {
+            hamburger.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
+
 /* -------------------------------------------------------------------------- */
 /*                              3D SCROLL LOGIC                               */
 /* -------------------------------------------------------------------------- */

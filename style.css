@@ -17,7 +17,6 @@
 
     /* 3D Constants */
     --depth: 1000px;
-    /* Depth between layers */
 }
 
 /* Reset & Base */
@@ -25,7 +24,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* Hide scrollbar for immersive feel, track handles it */
     scrollbar-width: none;
 }
 
@@ -40,7 +38,6 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     overflow-y: auto;
-    /* Allow native scrolling */
     min-height: 100vh;
 }
 
@@ -115,7 +112,6 @@ a {
 
 /* 3D Scroll Architecture */
 .scroll-track {
-    /* Height will be set by JS based on number of layers * variable depth */
     position: absolute;
     top: 0;
     left: 0;
@@ -140,7 +136,6 @@ a {
     height: 100%;
     transform-style: preserve-3d;
     will-change: transform;
-    /* JS controls transform: translateZ(...) */
 }
 
 /* Standard Layer - allow click-through for 3D depth interaction */
@@ -193,11 +188,9 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    /* background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); */
     background: transparent;
     /* Seamless blend */
     z-index: -1;
-    /* opacity: 0.5; */
 }
 
 .hero-title {
@@ -251,13 +244,12 @@ a {
     }
 }
 
-/* Split Content Blocks (High End / Essentials) */
+/* Split Content Blocks */
 .split-content {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     height: 80vh;
-    /* Don't fill full height to allow breathing room */
 }
 
 .split-content.reverse {
@@ -276,7 +268,6 @@ a {
 
 .text-block h2 {
     font-size: 3.5rem;
-    /* Large, luxurious */
     margin-bottom: 1.5rem;
 }
 
@@ -329,16 +320,23 @@ a {
     color: var(--text-muted);
     z-index: 100;
     pointer-events: none;
-    /* Let clicks pass through */
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
 }
 
-/* Sub-page Specific (Basic overrides for later) */
+/* Sub-page Specific */
 .subpage-body {
     overflow-y: auto;
     height: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 140px;
 }
 
-/* Header Refactor - Appended Overrides */
+/* Header Refactor */
 .header {
     background-color: rgba(5, 5, 5, 0.95);
     backdrop-filter: blur(10px);
@@ -366,6 +364,9 @@ a {
     letter-spacing: -0.05em;
     color: var(--text-primary);
     flex-shrink: 0;
+    z-index: 2000;
+    /* Ensure logo stays above overlay */
+    position: relative;
 }
 
 .nav {
@@ -376,7 +377,6 @@ a {
 }
 
 .nav-link {
-    margin-left: 0;
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--text-secondary);
@@ -408,7 +408,6 @@ a {
     width: 100%;
 }
 
-/* Right Side CTA */
 .nav-cta {
     flex-shrink: 0;
 }
@@ -419,8 +418,6 @@ a {
     border: 1px solid var(--accent);
     color: var(--accent);
     background: transparent;
-    border-radius: 0;
-    margin-top: 0;
     display: inline-block;
     transition: all 0.3s ease;
     text-transform: uppercase;
@@ -433,53 +430,119 @@ a {
     box-shadow: 0 0 15px rgba(225, 29, 72, 0.4);
 }
 
-/* Responsive Navbar & Layout */
+/* --- Mobile Menu Styles --- */
+.hamburger {
+    display: none;
+    /* Hidden on desktop */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    z-index: 2000;
+    /* Above overlay */
+    padding: 0;
+}
+
+.hamburger .bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(15px);
+    z-index: 1500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.mobile-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.mobile-nav-link {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.mobile-nav-link:hover {
+    color: var(--accent);
+}
+
+.mobile-cta {
+    font-size: 1.2rem;
+    padding: 1rem 3rem;
+    margin-top: 1rem;
+}
+
+/* Hamburger Animation */
+.hamburger.active .bar:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+}
+
+.hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
+}
+
+/* Responsive Overrides */
 @media (max-width: 900px) {
-    .header {
-        padding: 1rem;
+
+    .desktop-nav,
+    .desktop-cta {
+        display: none;
+        /* Hide standard nav */
     }
 
-    .header-container {
-        flex-wrap: wrap;
-        /* Allow wrapping */
-        gap: 1rem;
+    .hamburger {
+        display: flex;
+        /* Show burger */
     }
 
-    .logo {
-        width: 100%;
-        /* Full width for logo on mobile? Or just left */
-        text-align: center;
-        margin-bottom: 0.5rem;
+    /* Ensure content blocks use viewport units fully on mobile */
+    .hero-title {
+        font-size: 15vw;
+        /* Responsive scaling */
     }
 
-    .nav {
-        order: 2;
-        /* Move links below/after if needed, or keep centered */
-        width: 100%;
-        gap: 1rem;
-        flex-wrap: wrap;
+    .layer-content {
+        padding: 0 5vw;
+        /* Viewport unit padding */
     }
 
-    .nav-link {
-        font-size: 0.8rem;
-    }
-
-    .nav-cta {
-        order: 3;
-        width: 100%;
-        text-align: center;
-        margin-top: 0.5rem;
-    }
-
-    .btn-nav-cta {
-        width: 100%;
-        max-width: 200px;
-    }
-
-    /* Adjust visual blocks for mobile */
     .split-content {
         flex-direction: column !important;
-        /* Force stack */
         height: auto;
         padding: 4rem 0;
     }
@@ -488,10 +551,6 @@ a {
     .visual-block {
         max-width: 100%;
         margin: 0 0 2rem 0;
-    }
-
-    .hero-title {
-        font-size: 3rem;
     }
 }
 
@@ -507,47 +566,28 @@ a {
     margin-top: auto;
 }
 
-/* Homepage specific fixed footer */
-.footer-fixed {
-    position: fixed;
-    bottom: 1rem;
-    width: 100%;
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    z-index: 100;
-    pointer-events: none;
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
-}
-
-.subpage-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding-top: 140px;
-    /* Ensure content clears fixed header */
-}
-
 /* Hero Text Background Blur */
 .hero-text {
     position: relative;
     padding: 3rem;
     background: rgba(5, 5, 5, 0.4);
-    /* Slight dark tint */
     backdrop-filter: blur(10px);
-    /* Blur behind */
     border-radius: 8px;
-    /* Optional: border for style? or just pure blur */
-    /* border: 1px solid rgba(255, 255, 255, 0.05); */
+    pointer-events: auto;
 }
 
-/* 3D Clickability Fix Helper */
 .layer.passed {
     pointer-events: none;
-    /* JS will toggle this */
     visibility: hidden;
-    /* Also hide to be safe? JS manages opacity, but this is surer */
+}
+
+/* Clickability Deep Fix */
+/* Ensure the button itself is clickable even if parent has pointer-events: none via inheritance chains */
+.btn,
+a.btn,
+button {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 10;
+    /* Boost z-index to be sure */
 }
