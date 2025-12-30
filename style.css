@@ -314,3 +314,98 @@ a {
     overflow-y: auto;
     height: auto;
 }
+
+/* Header Refactor - Appended Overrides */
+.header {
+    background-color: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+.nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.nav-link {
+    margin-left: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active,
+.nav-link.text-accent {
+    color: var(--text-primary);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after,
+.nav-link.text-accent::after {
+    width: 100%;
+}
+
+/* Right Side CTA */
+.nav-cta {
+    flex-shrink: 0;
+}
+
+.btn-nav-cta {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.75rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+    border-radius: 0;
+    margin-top: 0;
+    display: inline-block;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.btn-nav-cta:hover {
+    background: var(--accent);
+    color: var(--text-primary);
+    box-shadow: 0 0 15px rgba(225, 29, 72, 0.4);
+}
