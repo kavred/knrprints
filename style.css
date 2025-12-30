@@ -180,21 +180,31 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+    /* background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); */
+    background: transparent;
+    /* Seamless blend */
     z-index: -1;
-    opacity: 0.5;
+    /* opacity: 0.5; */
 }
 
 .hero-title {
-    font-size: clamp(4rem, 8vw, 8rem);
-    margin-bottom: 1rem;
-    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    font-size: clamp(6rem, 15vw, 15rem);
+    /* Massive title */
+    margin-bottom: 2rem;
+    text-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    text-transform: uppercase;
 }
 
 .hero-subtitle {
     font-size: 1.5rem;
     color: var(--text-secondary);
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
 }
 
 .scrolldown {
@@ -408,4 +418,108 @@ a {
     background: var(--accent);
     color: var(--text-primary);
     box-shadow: 0 0 15px rgba(225, 29, 72, 0.4);
+}
+
+/* Responsive Navbar & Layout */
+@media (max-width: 900px) {
+    .header {
+        padding: 1rem;
+    }
+
+    .header-container {
+        flex-wrap: wrap;
+        /* Allow wrapping */
+        gap: 1rem;
+    }
+
+    .logo {
+        width: 100%;
+        /* Full width for logo on mobile? Or just left */
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .nav {
+        order: 2;
+        /* Move links below/after if needed, or keep centered */
+        width: 100%;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .nav-link {
+        font-size: 0.8rem;
+    }
+
+    .nav-cta {
+        order: 3;
+        width: 100%;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    .btn-nav-cta {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    /* Adjust visual blocks for mobile */
+    .split-content {
+        flex-direction: column !important;
+        /* Force stack */
+        height: auto;
+        padding: 4rem 0;
+    }
+
+    .text-block,
+    .visual-block {
+        max-width: 100%;
+        margin: 0 0 2rem 0;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+}
+
+/* Footer Fixes */
+.footer {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    padding: 2rem 0;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+/* Homepage specific fixed footer */
+.footer-fixed {
+    position: fixed;
+    bottom: 1rem;
+    width: 100%;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    z-index: 100;
+    pointer-events: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.subpage-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 3D Clickability Fix Helper */
+.layer.passed {
+    pointer-events: none;
+    /* JS will toggle this */
+    visibility: hidden;
+    /* Also hide to be safe? JS manages opacity, but this is surer */
 }

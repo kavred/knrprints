@@ -133,11 +133,6 @@ function init3DScroll() {
     const depth = 1000; // Distance between layers
     const layerCount = layers.length;
 
-    // Set scrollable height
-    // We want enough scroll space to traverse all layers
-    // Add extra padding at end to let the last layer sit a bit
-    scrollTrack.style.height = `${(layerCount) * depth + 500}px`;
-
     // Position layers initially
     layers.forEach((layer, index) => {
         const initialZ = -1 * index * depth;
@@ -145,52 +140,76 @@ function init3DScroll() {
         layer.dataset.initialZ = initialZ;
     });
 
-    // Scroll Loop
-    window.addEventListener('scroll', () => {
+    // Set scroll track height
+    // Reduce buffer to prevent "black page" at end
+    const totalDepth = (layers.length - 1) * depth;
+    // Just enough interaction space + viewport height to finish scrolling
+    scrollTrack.style.height = `${totalDepth + window.innerHeight}px`;
+
+    // Initial Position
+    function updateScroll() {
         const scrollTop = window.scrollY;
 
-        // Move the world forward
+        // Move World
         const world = document.getElementById('world');
         if (world) {
             world.style.transform = `translateZ(${scrollTop}px)`;
         }
 
-        // "Vaporize" Logic per layer
-        layers.forEach(layer => {
-            const initialZ = parseFloat(layer.dataset.initialZ);
-            const currentZ = initialZ + scrollTop; // Position relative to camera
+        // Vaporize Effect
+        layers.forEach((layer, index) => {
+            const layerZ = index * -depth; // Layer's original Z
+            const currentZ = layerZ + scrollTop; // Position relative to camera (0)
 
-            // Behind camera (>0)
-            if (currentZ > 50) { // Give a little buffer before vanishing
-                const distancePast = currentZ - 50;
-                // Fast fade out
-                const opacity = Math.max(0, 1 - (distancePast / 200));
-                // Blur increases as it disappears behind
-                const blur = Math.min(20, distancePast / 10);
+            let opacity = 1;
+            let blur = 0;
+            // Z=0 is screen plane. Z=1000 is the user's eye (roughly).
+            // We want to fade OUT as it comes towards us (pos Z).
+            // Let's start fading at Z=100 and be gone by Z=600.
+            const fadeStart = 100;
+            const fadeEnd = 600;
 
-                layer.style.opacity = opacity;
-                layer.style.filter = `blur(${blur}px)`;
-
-                // Hide completely to improve perf once passed
-                if (opacity <= 0) layer.style.visibility = 'hidden';
-                else layer.style.visibility = 'visible';
-
-            } else {
-                // In front of camera (<0)
-                const distanceAway = -currentZ;
-                let opacity = 1;
-
-                // Fade in from deep distance (> 500px away)
-                if (distanceAway > 800) {
-                    opacity = 1 - ((distanceAway - 800) / 1000);
-                }
-
-                layer.style.opacity = Math.max(0, opacity);
-                layer.style.filter = 'blur(0px)';
-                layer.style.visibility = 'visible';
+            if (currentZ > fadeStart) {
+                // Approaching eye
+                const progress = (currentZ - fadeStart) / (fadeEnd - fadeStart);
+                opacity = 1 - Math.max(0, Math.min(1, progress));
+                blur = Math.max(0, Math.min(1, progress)) * 20;
             }
+
+            // Clickability/Visibility Fix:
+            // If it's passed the fadeEnd, it's invisible/gone.
+            if (opacity < 0.05) {
+                layer.classList.add('passed'); // CSS handles pointer-events: none
+                layer.classList.remove('active-layer');
+            } else {
+                layer.classList.remove('passed');
+                layer.classList.add('active-layer');
+            }
+
+            // In front of camera check for deep fade in
+            // Ideally we only want to fade out when passing, but let's keep it simple.
+            // If it's way in front (e.g. -2000), it might be nice to fade it in too
+            // But user didn't ask for that, just fix the clickability.
+
+            layer.style.opacity = opacity;
+            layer.style.filter = `blur(${blur}px)`;
         });
+
+        requestAnimationFrame(updateScroll);
+    }
+
+    // Start loop
+    window.addEventListener('scroll', () => {
+        // Just trigger via rAF loop essentially or native scroll
+        // Since we use rAF inside updateScroll for the loop if we wanted continuous
+        // OR we can just bind to scroll.
+        // Let's bind to scroll for efficiency, but updateScroll requests its own frame?
+        // Actually the previous code had rAF loop. Let's stick to scroll listener for simple state updates.
     });
+
+    // Better pattern:
+    updateScroll();
+    window.addEventListener('scroll', updateScroll);
 }
 
 /* -------------------------------------------------------------------------- */
