@@ -143,6 +143,7 @@ a {
     /* JS controls transform: translateZ(...) */
 }
 
+/* Standard Layer - allow click-through for 3D depth interaction */
 .layer {
     position: absolute;
     width: 100%;
@@ -152,7 +153,8 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* JS controls transform: translateZ(...) for initial positions */
+    pointer-events: none;
+    /* Let clicks pass through empty space */
 }
 
 /* Layer Content Styling */
@@ -166,6 +168,17 @@ a {
     /* Ensure content is centered vertically */
     flex-direction: column;
     justify-content: center;
+    pointer-events: none;
+    /* Let clicks pass through empty space */
+}
+
+/* Re-enable pointer events for actual content */
+.hero-text,
+.scrolldown,
+.text-block,
+.visual-block,
+.center-content {
+    pointer-events: auto;
 }
 
 /* Hero Section */
@@ -514,6 +527,21 @@ a {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-top: 140px;
+    /* Ensure content clears fixed header */
+}
+
+/* Hero Text Background Blur */
+.hero-text {
+    position: relative;
+    padding: 3rem;
+    background: rgba(5, 5, 5, 0.4);
+    /* Slight dark tint */
+    backdrop-filter: blur(10px);
+    /* Blur behind */
+    border-radius: 8px;
+    /* Optional: border for style? or just pure blur */
+    /* border: 1px solid rgba(255, 255, 255, 0.05); */
 }
 
 /* 3D Clickability Fix Helper */
