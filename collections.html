@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNR Prints | Signature Collections</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body class="subpage-body">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">KNR<span class="text-accent">PRINTS</span></a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="collections.html" class="nav-link text-accent">Signature</a>
+                <a href="essentials.html" class="nav-link">Essentials</a>
+                <a href="custom.html" class="nav-link">Custom</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+        <div class="section-header">
+            <div>
+                <span class="label">The High-End Collection</span>
+                <h1>Signature Series</h1>
+                <p style="color: var(--text-secondary); max-width: 600px; margin-top: 1rem;">
+                    Engineering excellence visualized. Each print in this collection features technical specifications
+                    and expert commentary, printed on museum-grade archival materials.
+                </p>
+            </div>
+        </div>
+
+        <!-- Filtered Grid -->
+        <div id="productGrid" class="product-grid">
+            <!-- JS will populate only Signature items -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>&copy; 2024 KNR Prints. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Inline script to trigger render specific to this page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if renderProducts exists (imported from script.js)
+            // We need to modify script.js to export renderProducts or expose it globally
+            // For now, let's assume we update script.js to handle this or just copy the data logic.
+            // Actually, best practice is to have script.js handle the logic based on page.
+        });
+    </script>
+</body>
+
+</html>

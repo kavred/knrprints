@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNR Prints | Custom Project</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body class="subpage-body">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">KNR<span class="text-accent">PRINTS</span></a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="collections.html" class="nav-link">Signature</a>
+                <a href="essentials.html" class="nav-link">Essentials</a>
+                <a href="custom.html" class="nav-link text-accent">Custom</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+        <div class="center-content">
+            <span class="label">Bespoke Manufacturing</span>
+            <h1>Engineering Your Vision</h1>
+            <p style="margin-bottom: 3rem;">
+                Submit your requirements or upload a 3D model (STL) for custom print analysis.
+            </p>
+
+            <div class="text-block" style="text-align: left; max-width: 800px; margin: 0 auto; width: 100%;">
+                <form id="customForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Project
+                            Title</label>
+                        <input type="text" placeholder="e.g. Prototype Housing V2"
+                            style="width: 100%; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border); color: white; border-radius: 4px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Description
+                            / Requirements</label>
+                        <textarea rows="5" placeholder="Describe the material requirements, scale, and finish..."
+                            style="width: 100%; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border); color: white; border-radius: 4px;"></textarea>
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Upload File
+                            (STL/OBJ)</label>
+                        <div style="border: 2px dashed var(--border); padding: 2rem; text-align: center; border-radius: 4px; cursor: pointer; transition: border-color 0.3s;"
+                            onmouseover="this.style.borderColor='#E11D48'"
+                            onmouseout="this.style.borderColor='#27272A'">
+                            <p style="color: var(--text-secondary);">Drag and drop your file here or click to browse</p>
+                            <input type="file" style="display: none;">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Submit
+                        Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>&copy; 2024 KNR Prints. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

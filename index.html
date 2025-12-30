@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNR Prints | Luxurious Engineering</title>
+    <meta name="description" content="Where high-performance engineering meets quality. Bespoke prints options.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body>
+
+    <!-- Header (Identical to sub-pages) -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">KNR<span class="text-accent">PRINTS</span></a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link text-accent">Home</a>
+                <a href="collections.html" class="nav-link">Signature</a>
+                <a href="essentials.html" class="nav-link">Essentials</a>
+                <a href="custom.html" class="nav-link">Custom</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Scroll Track (Invisible, creates the scrollable height) -->
+    <div class="scroll-track"></div>
+
+    <!-- Fixed Viewport for 3D Content -->
+    <div class="viewport">
+        <div class="world" id="world">
+
+            <!-- Layer 1: Hero (Front) -->
+            <section class="layer" id="layer-hero">
+                <div class="layer-content hero-content">
+                    <div class="video-placeholder">
+                        <!-- Placeholder for background render -->
+                        <div class="overlay"></div>
+                    </div>
+                    <div class="hero-text">
+                        <h1 class="hero-title">KNR<span class="text-accent">PRINTS</span></h1>
+                        <p class="hero-subtitle">Engineering the Aesthetic.</p>
+                        <div class="scrolldown">
+                            <span>Scroll to Explore</span>
+                            <div class="arrow">↓</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Layer 2: High-End Collections -->
+            <section class="layer" id="layer-collections">
+                <div class="layer-content split-content">
+                    <div class="text-block">
+                        <span class="label">The Signature Series</span>
+                        <h2>Luxurious Engineering</h2>
+                        <p>Curated technical schematics and structural art on museum-grade archival matte. For the
+                            workspace that demands excellence.</p>
+                        <a href="collections.html" class="btn btn-primary">View Signature Collection</a>
+                    </div>
+                    <div class="visual-block" style="background: linear-gradient(135deg, #111, #222);">
+                        <!-- Placeholder for classy image -->
+                        <div class="placeholder-text">Signature Preview</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Layer 3: The Essentials -->
+            <section class="layer" id="layer-essentials">
+                <div class="layer-content split-content reverse">
+                    <div class="text-block">
+                        <span class="label">The Essentials</span>
+                        <h2>Versatility & Choice</h2>
+                        <p>Vibrant colors, modern designs, and endless options. Perfect for living spaces and studios
+                            that need a pop of energy.</p>
+                        <a href="essentials.html" class="btn btn-outline">Explore Essentials</a>
+                    </div>
+                    <div class="visual-block" style="background: linear-gradient(135deg, #222, #333);">
+                        <!-- Placeholder for diverse image -->
+                        <div class="placeholder-text">Essentials Preview</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Layer 4: Custom Prints -->
+            <section class="layer" id="layer-custom">
+                <div class="layer-content center-content">
+                    <span class="label">Bespoke Manufacturing</span>
+                    <h2>Your Vision, Engineered.</h2>
+                    <p>Upload your own STL files or describe your custom engineering print needs.</p>
+                    <a href="custom.html" class="btn btn-primary">Start Custom Project</a>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Footer (Static overlays or final scroll position) -->
+    <!-- Ideally footer appears after scrolling through everything -->
+    <footer class="footer-fixed">
+        <p>&copy; 2024 KNR Prints</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
