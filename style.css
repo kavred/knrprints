@@ -595,3 +595,141 @@ button {
     z-index: 10;
     /* Boost z-index to be sure */
 }
+/* -------------------------------------------------------------------------- */
+/*                           SIGNATURE COLLECTIONS PAGE                        */
+/* -------------------------------------------------------------------------- */
+
+.collections-page {
+    padding-top: 120px; /* Space for fixed header */
+    background-color: var(--bg-primary);
+    min-height: 100vh;
+}
+
+.collection-hero {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #050505 70%);
+}
+
+.collection-hero h1 {
+    font-size: 5rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin: 1rem 0;
+}
+
+.collection-hero p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.collection-directory {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-bottom: 10rem;
+}
+
+.collection-item {
+    display: flex;
+    align-items: center;
+    min-height: 80vh;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.collection-item.reverse {
+    flex-direction: row-reverse;
+}
+
+.collection-visual, .collection-info {
+    flex: 1;
+    padding: 4rem;
+}
+
+.collection-visual {
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.placeholder-image {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #111, #222);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.collection-item:hover .placeholder-image {
+    transform: scale(1.02);
+    border-color: var(--accent);
+}
+
+.collection-number {
+    font-size: 8rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.03);
+    line-height: 1;
+    display: block;
+    margin-bottom: -2rem;
+    position: relative;
+    z-index: 0;
+}
+
+.collection-info h2 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.collection-info p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 400px;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards;
+}
+
+.fade-in-delay {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards 0.3s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .collection-item, .collection-item.reverse {
+        flex-direction: column;
+        padding: 4rem 1rem;
+    }
+    .collection-hero h1 { font-size: 3rem; }
+    .collection-visual { height: 40vh; width: 100%; padding: 0; }
+    .collection-info { width: 100%; padding: 2rem 0; text-align: center; }
+    .collection-info p { margin: 0 auto 2rem auto; }
+}
