@@ -570,10 +570,14 @@ a {
 .hero-text {
     position: relative;
     padding: 3rem;
-    background: rgba(5, 5, 5, 0.4);
-    backdrop-filter: blur(10px);
+    background: rgba(5, 5, 5, 0.85);
+    /* Significantly Darker for readability */
+    backdrop-filter: blur(15px);
+    /* Stronger blur */
     border-radius: 8px;
     pointer-events: auto;
+    /* subtle border to define edge */
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .layer.passed {

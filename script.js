@@ -208,8 +208,10 @@ function init3DScroll() {
             }
 
             // Clickability/Visibility Fix:
-            // If it's passed the fadeEnd, it's invisible/gone.
-            if (opacity < 0.05) {
+            // If it's starting to fade out significantly (passed camera), disable interactions
+            // to allow clicks to pass through to the next layer (which is coming into view).
+            // Threshold increased to 0.5 to unlock next layer sooner.
+            if (opacity < 0.5) {
                 layer.classList.add('passed'); // CSS handles pointer-events: none
                 layer.classList.remove('active-layer');
             } else {
