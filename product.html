@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | KNR Prints</title>
+    <meta name="description" content="View product details.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">KNR<span class="text-accent">PRINTS</span></a>
+            <nav class="nav desktop-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="collections.html" class="nav-link text-accent">Signature</a>
+                <a href="essentials.html" class="nav-link">Essentials</a>
+            </nav>
+            <div class="nav-cta desktop-cta">
+                <a href="custom.html" class="btn-nav-cta">Start Project</a>
+            </div>
+            <button class="hamburger" aria-label="Toggle Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+        <div class="mobile-nav-overlay">
+            <nav class="mobile-nav">
+                <a href="index.html" class="mobile-nav-link">Home</a>
+                <a href="collections.html" class="mobile-nav-link">Signature</a>
+                <a href="essentials.html" class="mobile-nav-link">Essentials</a>
+                <a href="custom.html" class="btn-nav-cta mobile-cta">Start Project</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="product-detail-page">
+        <div class="product-container">
+            <!-- Left: Gallery -->
+            <div class="product-gallery">
+                <div class="main-image" id="product-main-image">
+                    <!-- Placeholder populated by JS -->
+                </div>
+            </div>
+
+            <!-- Right: Info -->
+            <div class="product-info-panel">
+                <div class="breadcrumb" id="product-breadcrumb">
+                    <a href="collections.html">Signature</a> / <span id="category-crumb">Category</span>
+                </div>
+
+                <h1 id="product-title">Loading Product...</h1>
+                <p class="price" id="product-price">--</p>
+                <p class="description" id="product-desc">Please wait while we fetch the details.</p>
+
+                <!-- Options -->
+                <div class="product-options">
+                    <div class="option-group">
+                        <span class="option-label">Color</span>
+                        <div class="color-selector" id="color-selector">
+                            <!-- Colors injected by JS -->
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <span class="option-label">Quantity</span>
+                        <div class="quantity-selector">
+                            <button class="qty-btn" id="qty-minus">-</button>
+                            <input type="text" id="qty-input" value="1" readonly>
+                            <button class="qty-btn" id="qty-plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-actions">
+                    <!-- External Link Placeholder -->
+                    <a href="#" class="btn btn-primary btn-full" id="buy-button" onclick="return false;">Proceed to
+                        Checkout</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 KNR Prints</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Init Product Page Logic (can also move to script.js if preferred, but doing inline init for clarity)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initProductPage === 'function') {
+                initProductPage();
+            }
+        });
+    </script>
+</body>
+
+</html>
