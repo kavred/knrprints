@@ -20,6 +20,7 @@
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="collections.html" class="nav-link text-accent">Signature</a>
                 <a href="essentials.html" class="nav-link">Essentials</a>
+                <a href="cart.html" class="nav-link">Cart (<span id="cart-count">0</span>)</a>
             </nav>
             <div class="nav-cta desktop-cta">
                 <a href="custom.html" class="btn-nav-cta">Start Project</a>
@@ -35,6 +36,7 @@
                 <a href="index.html" class="mobile-nav-link">Home</a>
                 <a href="collections.html" class="mobile-nav-link">Signature</a>
                 <a href="essentials.html" class="mobile-nav-link">Essentials</a>
+                <a href="cart.html" class="mobile-nav-link">Cart (<span id="mobile-cart-count">0</span>)</a>
                 <a href="custom.html" class="btn-nav-cta mobile-cta">Start Project</a>
             </nav>
         </div>
@@ -79,9 +81,7 @@
                 </div>
 
                 <div class="product-actions">
-                    <!-- External Link Placeholder -->
-                    <a href="#" class="btn btn-primary btn-full" id="buy-button" onclick="return false;">Proceed to
-                        Checkout</a>
+                    <button class="btn btn-primary btn-full" id="add-to-cart-btn">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -93,10 +93,29 @@
 
     <script src="script.js"></script>
     <script>
-        // Init Product Page Logic (can also move to script.js if preferred, but doing inline init for clarity)
         document.addEventListener('DOMContentLoaded', () => {
+            // Init Page logic (assuming initProductPage handles standard rendering)
             if (typeof initProductPage === 'function') {
                 initProductPage();
+            }
+
+            // Add To Cart Logic
+            const btn = document.getElementById('add-to-cart-btn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const params = new URLSearchParams(window.location.search);
+                    const id = params.get('id');
+
+                    // Get Qty
+                    const qty = parseInt(document.getElementById('qty-input').value);
+
+                    // Get Active Color
+                    const activeColorEl = document.querySelector('.color-option.active');
+                    const color = activeColorEl ? activeColorEl.style.backgroundColor : '#000'; // Fallback
+
+                    // Call Global Function
+                    addToCart(id, color, qty);
+                });
             }
         });
     </script>

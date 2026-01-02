@@ -551,3 +551,125 @@ function initProductPage() {
         if (val < 10) qtyInput.value = val + 1;
     });
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                CART LOGIC                                  */
+/* -------------------------------------------------------------------------- */
+
+// Store: [{ id: 'k_turbine', color: '#hex', qty: 1 }]
+function getCart() {
+    const stored = localStorage.getItem('knr_cart');
+    return stored ? JSON.parse(stored) : [];
+}
+
+function saveCart(cart) {
+    localStorage.setItem('knr_cart', JSON.stringify(cart));
+    updateCartCount();
+}
+
+function addToCart(productId, color, qty) {
+    const cart = getCart();
+    
+    // Check if same product + color exists
+    const existingIndex = cart.findIndex(item => item.id === productId && item.color === color);
+
+    if (existingIndex > -1) {
+        cart[existingIndex].qty += qty;
+    } else {
+        cart.push({ id: productId, color: color, qty: qty });
+    }
+
+    saveCart(cart);
+    alert('Item added to cart!'); // Simple feedback for now
+    updateCartCount();
+}
+
+function updateCartCount() {
+    const cart = getCart();
+    const count = cart.reduce((acc, item) => acc + item.qty, 0);
+    
+    // Update all count badges on the page
+    document.querySelectorAll('#cart-count, #mobile-cart-count').forEach(el => {
+        el.innerText = count;
+    });
+}
+
+function removeFromCart(index) {
+    const cart = getCart();
+    cart.splice(index, 1);
+    saveCart(cart);
+    initCartPage(); // Re-render
+}
+
+function updateCartItemQty(index, change) {
+    const cart = getCart();
+    const newQty = cart[index].qty + change;
+    
+    if (newQty > 0 && newQty <= 10) {
+        cart[index].qty = newQty;
+        saveCart(cart);
+        initCartPage();
+    }
+}
+
+// Render Cart Page
+function initCartPage() {
+    updateCartCount();
+    
+    const cart = getCart();
+    const listEl = document.getElementById('cart-items-list');
+    const emptyEl = document.getElementById('cart-empty-state');
+    const contentEl = document.getElementById('cart-content');
+    const totalEl = document.getElementById('cart-total');
+
+    if (!listEl) return; // Not on cart page
+
+    if (cart.length === 0) {
+        emptyEl.style.display = 'block';
+        contentEl.style.display = 'none';
+        return;
+    }
+
+    emptyEl.style.display = 'none';
+    contentEl.style.display = 'block';
+    
+    listEl.innerHTML = '';
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        const product = productDatabase[item.id];
+        if (!product) return; // Skip if invalid
+
+        const itemTotal = parseFloat(product.price) * item.qty;
+        total += itemTotal;
+
+        const row = document.createElement('div');
+        row.className = 'cart-item-row';
+        
+        row.innerHTML = `
+            <div class="cart-thumb" style="background-color: #222;"></div> 
+            <div class="cart-details">
+                <h3>${product.title}</h3>
+                <div class="meta">
+                    Color: <span class="color-dot" style="background-color: ${item.color}"></span>
+                </div>
+            </div>
+            <div class="quantity-selector">
+                <button class="qty-btn" onclick="updateCartItemQty(${index}, -1)">-</button>
+                <input type="text" id="qty-input" value="${item.qty}" readonly>
+                <button class="qty-btn" onclick="updateCartItemQty(${index}, 1)">+</button>
+            </div>
+            <div class="cart-price">$${itemTotal.toFixed(2)}</div>
+            <button class="btn-remove" onclick="removeFromCart(${index})">&times;</button>
+        `;
+        
+        listEl.appendChild(row);
+    });
+
+    totalEl.innerText = '$' + total.toFixed(2);
+}
+
+// Initialize validation on load
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartCount();
+});

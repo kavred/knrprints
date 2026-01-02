@@ -1053,3 +1053,121 @@ button {
         gap: 2rem;
     }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                SHOPPING CART                                */
+/* -------------------------------------------------------------------------- */
+
+.cart-page {
+    padding-top: 140px;
+    padding-bottom: 8rem;
+    background-color: var(--bg-primary);
+    min-height: 80vh;
+}
+
+.cart-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.cart-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.empty-msg {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.cart-item-row {
+    display: grid;
+    grid-template-columns: 80px 2fr 1fr 1fr 40px;
+    gap: 2rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem 0;
+}
+
+.cart-thumb {
+    width: 80px;
+    height: 80px;
+    background: #222;
+    background-size: cover;
+    border-radius: 4px;
+}
+
+.cart-details h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.cart-details .meta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.cart-price {
+    font-weight: 500;
+    color: var(--accent);
+}
+
+.btn-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-remove:hover {
+    color: #ff4444;
+}
+
+.cart-summary {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    max-width: 400px;
+    margin-left: auto;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .cart-item-row {
+        grid-template-columns: 60px 1fr;
+        grid-template-areas: 
+            "thumb details"
+            "qty price"
+            "remove remove";
+        gap: 1rem;
+    }
+    .cart-thumb { grid-area: thumb; }
+    .cart-details { grid-area: details; }
+    .quantity-selector { grid-area: qty; }
+    .cart-price { grid-area: price; text-align: right; }
+    .btn-remove { grid-area: remove; text-align: left; }
+}
