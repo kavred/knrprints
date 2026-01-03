@@ -1237,3 +1237,102 @@ button {
         padding: 0.5rem;
     }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                          ESSENTIALS & TIER STYLES                           */
+/* -------------------------------------------------------------------------- */
+
+/* Tier Badge on Product Page */
+.tier-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    border-radius: 2px;
+}
+
+.tier-badge.signature {
+    background: rgba(225, 29, 72, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(225, 29, 72, 0.3);
+}
+
+.tier-badge.essentials {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Card Styling for Essentials (Grid) */
+.product-card.essentials .card-colors {
+    display: flex;
+    gap: 0.4rem;
+    margin: 0.8rem 0;
+    flex-wrap: wrap;
+}
+
+.color-dot-small {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-desc-short {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Update default product card to handle variable content heights better */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    /* ensure height consistency if needed, but masonry-ish grid is fine usually */
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-meta {
+    margin-top: auto;
+    /* Push view button to bottom */
+    padding-top: 1rem;
+}
+
+/* Refined Essentials Styles */
+.essentials-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.product-card.essentials {
+    background: transparent;
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.product-card.essentials:hover {
+    transform: translateY(-5px);
+}
+
+.essentials-content {
+    text-align: left;
+    padding: 0 0.5rem;
+}

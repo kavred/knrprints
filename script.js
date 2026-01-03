@@ -3,95 +3,7 @@
 /* -------------------------------------------------------------------------- */
 /*                                PRODUCT DATA                                */
 /* -------------------------------------------------------------------------- */
-const products = [
-    // Workspace Environment
-    {
-        id: 'ws-001',
-        title: 'Mechanical Key Switch',
-        category: 'workspace',
-        tier: 'signature',
-        price: '$120.00',
-        specs: ['Dimensions: 24x36"', 'Material: Archival Matte', 'Limited Run: 50'],
-        engComment: 'Exploded view of a tactile switch mechanism. Note the gold-plated contact points for optimal actuation.',
-        image: null // Placeholder
-    },
-    {
-        id: 'ws-002',
-        title: 'Circuit Topology',
-        category: 'workspace',
-        tier: 'essentials',
-        price: '$45.00',
-        image: null
-    },
-    {
-        id: 'ws-003',
-        title: 'Turbine Blade Schematic',
-        category: 'workspace',
-        tier: 'signature',
-        price: '$140.00',
-        specs: ['Dimensions: 18x24"', 'Paper: Cotton Rag 310gsm', 'Signed by Artist'],
-        engComment: 'CFD analysis visualization of airflow over a high-pressure turbine blade. Optimization for thermal efficiency.',
-        image: null
-    },
-
-    // Living Space Environment
-    {
-        id: 'ls-001',
-        title: 'Brutalist Concrete I',
-        category: 'living',
-        tier: 'essentials',
-        price: '$55.00',
-        image: null
-    },
-    {
-        id: 'ls-002',
-        title: 'Suspension Bridge Node',
-        category: 'living',
-        tier: 'signature',
-        price: '$180.00',
-        specs: ['Dimensions: 30x40"', 'Frame: Aluminium', 'Museum Glass'],
-        engComment: 'Detailed study of the main cable anchorage point. Tensile forces are distributed through the radial steel array.',
-        image: null
-    },
-    {
-        id: 'ls-003',
-        title: 'Fluid Dynamics Abstract',
-        category: 'living',
-        tier: 'essentials',
-        price: '$60.00',
-        image: null
-    },
-
-    // Studio Environment
-    {
-        id: 'st-001',
-        title: 'Camera Lens Cross-Section',
-        category: 'studio',
-        tier: 'signature',
-        price: '$150.00',
-        specs: ['Dimensions: 24x24"', 'Finish: Satin', 'Technical Grade'],
-        engComment: 'Internal optical assembly of a prime lens. 14 elements in 10 groups with aspherical correction.',
-        image: null
-    },
-    {
-        id: 'st-002',
-        title: 'Color Theory Wheel',
-        category: 'studio',
-        tier: 'essentials',
-        price: '$40.00',
-        image: null
-    },
-    {
-        id: 'st-003',
-        title: 'Acoustic Waveform',
-        category: 'studio',
-        tier: 'signature',
-        price: '$130.00',
-        specs: ['Dimensions: 12x48"', 'Sound dampening backing', 'Custom scale'],
-        engComment: 'Visual representation of a sine sweep from 20Hz to 20kHz. The fundamental building block of audio engineering.',
-        image: null
-    }
-];
+const products = []; // DEPRECATED: Using productDatabase for all source of truth now.
 
 /* -------------------------------------------------------------------------- */
 /*                               INITIALIZATION                               */
@@ -109,15 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const productGrid = document.getElementById('productGrid');
     if (productGrid) {
         // Determine page context via URL or simple body check
-        // For simplicity, let's look at the window.location.pathname
-
         const path = window.location.pathname;
         if (path.includes('collections.html')) {
             renderProducts('signature');
         } else if (path.includes('essentials.html')) {
             renderProducts('essentials');
         } else {
-            // Fallback for general gallery if exists
+            // Fallback
             renderProducts('all');
         }
     }
@@ -172,9 +82,7 @@ function init3DScroll() {
     });
 
     // Set scroll track height
-    // Reduce buffer to prevent "black page" at end
     const totalDepth = (layers.length - 1) * depth;
-    // Just enough interaction space + viewport height to finish scrolling
     scrollTrack.style.height = `${totalDepth + window.innerHeight}px`;
 
     // Initial Position
@@ -194,9 +102,6 @@ function init3DScroll() {
 
             let opacity = 1;
             let blur = 0;
-            // Z=0 is screen plane. Z=1000 is the user's eye (roughly).
-            // We want to fade OUT as it comes towards us (pos Z).
-            // Let's start fading at Z=100 and be gone by Z=600.
             const fadeStart = 100;
             const fadeEnd = 600;
 
@@ -207,10 +112,6 @@ function init3DScroll() {
                 blur = Math.max(0, Math.min(1, progress)) * 20;
             }
 
-            // Clickability/Visibility Fix:
-            // If it's starting to fade out significantly (passed camera), disable interactions
-            // to allow clicks to pass through to the next layer (which is coming into view).
-            // Threshold increased to 0.5 to unlock next layer sooner.
             if (opacity < 0.5) {
                 layer.classList.add('passed'); // CSS handles pointer-events: none
                 layer.classList.remove('active-layer');
@@ -219,11 +120,6 @@ function init3DScroll() {
                 layer.classList.add('active-layer');
             }
 
-            // In front of camera check for deep fade in
-            // Ideally we only want to fade out when passing, but let's keep it simple.
-            // If it's way in front (e.g. -2000), it might be nice to fade it in too
-            // But user didn't ask for that, just fix the clickability.
-
             layer.style.opacity = opacity;
             layer.style.filter = `blur(${blur}px)`;
         });
@@ -231,16 +127,6 @@ function init3DScroll() {
         requestAnimationFrame(updateScroll);
     }
 
-    // Start loop
-    window.addEventListener('scroll', () => {
-        // Just trigger via rAF loop essentially or native scroll
-        // Since we use rAF inside updateScroll for the loop if we wanted continuous
-        // OR we can just bind to scroll.
-        // Let's bind to scroll for efficiency, but updateScroll requests its own frame?
-        // Actually the previous code had rAF loop. Let's stick to scroll listener for simple state updates.
-    });
-
-    // Better pattern:
     updateScroll();
     window.addEventListener('scroll', updateScroll);
 }
@@ -255,16 +141,24 @@ function renderProducts(filterMode = 'all') {
 
     productGrid.innerHTML = '';
 
-    let filteredProducts = products;
+    // Convert object to array for easier filtering/mapping
+    const allProducts = Object.keys(productDatabase).map(key => {
+        return {
+            id: key,
+            ...productDatabase[key]
+        };
+    });
+
+    let filteredProducts = allProducts;
     if (filterMode === 'signature') {
-        filteredProducts = products.filter(p => p.tier === 'signature');
+        filteredProducts = allProducts.filter(p => p.tier === 'signature');
     } else if (filterMode === 'essentials') {
-        filteredProducts = products.filter(p => p.tier === 'essentials');
+        filteredProducts = allProducts.filter(p => p.tier === 'essentials');
     }
 
     filteredProducts.forEach(product => {
-        const card = document.createElement('div');
-        card.className = `product-card ${product.tier}`;
+        const card = document.createElement('article');
+        card.className = `product-card ${product.tier || ''}`;
 
         // Build card HTML
         let specsHtml = '';
@@ -284,29 +178,69 @@ function renderProducts(filterMode = 'all') {
         const tierLabel = product.tier === 'signature' ? 'Signature Series' : 'Essentials';
         const tierClass = product.tier === 'signature' ? 'tier-signature' : 'tier-essentials';
 
-        card.innerHTML = `
-            <div class="card-image-wrapper">
-                <!-- Placeholder -->
-                <div class="card-image-placeholder">
-                    <span>${product.title}</span>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-header">
-                    <span class="card-category">${product.category}</span>
-                    <span class="card-tier ${tierClass}">${tierLabel}</span>
-                </div>
-                <h3 class="card-title">${product.title}</h3>
-                <div class="card-price">${product.price}</div>
-                
-                ${specsHtml}
-                ${commentHtml}
-                
-                <div class="card-meta">
-                    <a href="#" class="btn-text">View Details →</a>
-                </div>
-            </div>
-        `;
+        // Description truncated for grid
+        const shortDesc = product.desc ? (product.desc.substring(0, 80) + '...') : '';
+
+        // Routing Logic
+        let viewLink = `product.html?id=${product.id}`;
+        if (product.tier === 'essentials') {
+            viewLink = `product-essentials.html?id=${product.id}`;
+        }
+
+        // SIMPLIFIED CARD FOR ESSENTIALS
+        if (product.tier === 'essentials') {
+            card.innerHTML = `
+                <a href="${viewLink}" class="card-link-wrapper">
+                    <div class="card-image-wrapper">
+                        <!-- Placeholder with dark background -->
+                        <div class="card-image-placeholder essentials-placeholder" style="background: radial-gradient(circle, #222, #050505);">
+                            <span style="opacity:0.5; font-size:0.8rem; letter-spacing:0.1em;">IMAGE PLACEHOLDER</span>
+                        </div>
+                    </div>
+                    <div class="card-content essentials-content">
+                        <!-- Minimal Header -->
+                        <h3 class="card-title" style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500;">${product.title}</h3>
+                        <div class="card-price" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">$${product.price}</div>
+                        
+                        <p class="card-desc-short" style="font-size: 0.85rem; color: #666;">${shortDesc}</p>
+                    </div>
+                </a>
+            `;
+        } else {
+            // SIGNATURE CARD
+            let colorsHtml = '';
+            if (product.tier === 'essentials' && product.colors) {
+                colorsHtml = `<div class="card-colors">
+                    ${product.colors.map(c => `<span class="color-dot-small" style="background-color: ${c}"></span>`).join('')}
+                </div>`;
+            }
+
+            card.innerHTML = `
+                <a href="${viewLink}" class="card-link-wrapper">
+                    <div class="card-image-wrapper">
+                        <!-- Placeholder -->
+                        <div class="card-image-placeholder">
+                            <span>${product.title}</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <span class="card-category">${product.series}</span>
+                            <span class="card-tier ${tierClass}">${tierLabel}</span>
+                        </div>
+                        <h3 class="card-title">${product.title}</h3>
+                        <div class="card-price">$${product.price}</div>
+                        
+                        ${specsHtml}
+                        ${commentHtml}
+                        
+                        <div class="card-meta">
+                            <span class="btn-text">View Details →</span>
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
 
         productGrid.appendChild(card);
     });
@@ -317,19 +251,21 @@ function renderProducts(filterMode = 'all') {
 /* -------------------------------------------------------------------------- */
 
 const productDatabase = {
-    // KINETIC SERIES
+    // KINETIC SERIES (Signature)
     'k_turbine': {
         title: 'Turbine Cross-Section',
         price: '240.00',
-        desc: 'A detailed cutaway of a high-bypass turbofan engine, revealing the intricate blade geometry and compression stages. Perfect for aviation enthusiasts.',
+        desc: 'A detailed cutaway of a high-bypass turbofan engine, revealing the intricate blade geometry and compression stages.',
         series: 'Kinetic',
-        colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333'] // Gold, Silver, Bronze, Charcoal
+        tier: 'signature',
+        colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
     'k_v12': {
         title: 'V12 Piston Assembly',
         price: '180.00',
-        desc: 'Exploded view of a performance engine cylinder block, showcasing the piston, connecting rod, and crankshaft relationship in motion.',
+        desc: 'Exploded view of a performance engine cylinder block, showcasing the piston, connecting rod, and crankshaft relationship.',
         series: 'Kinetic',
+        tier: 'signature',
         colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
     'k_diff': {
@@ -337,6 +273,7 @@ const productDatabase = {
         price: '160.00',
         desc: 'Topological study of limited-slip differential gears. The mathematical beauty of torque distribution visualized.',
         series: 'Kinetic',
+        tier: 'signature',
         colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
     'k_hydro': {
@@ -344,6 +281,7 @@ const productDatabase = {
         price: '210.00',
         desc: 'Schematic of heavy machinery fluid dynamics. Power transfer through pressurized systems.',
         series: 'Kinetic',
+        tier: 'signature',
         colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
     'k_pump': {
@@ -351,6 +289,7 @@ const productDatabase = {
         price: '195.00',
         desc: 'Flow analysis diagram of industrial pumping systems. The spiral volute geometry is a masterpiece of efficiency.',
         series: 'Kinetic',
+        tier: 'signature',
         colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
     'k_cam': {
@@ -358,6 +297,7 @@ const productDatabase = {
         price: '155.00',
         desc: 'Precision lift and duration geometry curves of a racing camshaft. Engineering at the micron level.',
         series: 'Kinetic',
+        tier: 'signature',
         colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
     'k_rotor': {
@@ -365,6 +305,7 @@ const productDatabase = {
         price: '225.00',
         desc: 'Wankel engine combustion cycle visualization. The unique Reuleaux triangle in action.',
         series: 'Kinetic',
+        tier: 'signature',
         colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
     'k_trans': {
@@ -372,15 +313,17 @@ const productDatabase = {
         price: '280.00',
         desc: 'Complex valve body pathways for automatic shifting. A labyrinth of fluid logic.',
         series: 'Kinetic',
+        tier: 'signature',
         colors: ['#D4AF37', '#C0C0C0', '#cd7f32', '#333333']
     },
 
-    // STRUCTURAL SERIES (Colors: Concrete, Steel Blue, Rust, Black)
+    // STRUCTURAL SERIES (Signature)
     's_bridge': {
         title: 'Suspension Bridge Node',
         price: '320.00',
         desc: 'Analysis of main cable connection points and tension limits on a mega-structure bridge.',
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
     's_beam': {
@@ -388,13 +331,15 @@ const productDatabase = {
         price: '190.00',
         desc: 'Load path visualization under maximum localized stress on a standard universal beam.',
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
     's_dome': {
         title: 'Geodesic Dome Joint',
         price: '210.00',
-        desc: 'Vertex connection detail for spherical structures. Buckminster Fuller\'s vision in print.',
+        desc: "Vertex connection detail for spherical structures. Buckminster Fuller's vision in print.",
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
     's_sky': {
@@ -402,6 +347,7 @@ const productDatabase = {
         price: '280.00',
         desc: 'Cross-section of elevator shaft and wind bracing systems in a supertall building.',
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
     's_cant': {
@@ -409,6 +355,7 @@ const productDatabase = {
         price: '175.00',
         desc: 'Rebar placement layout for extended concrete spans. The hidden strength within.',
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
     's_truss': {
@@ -416,6 +363,7 @@ const productDatabase = {
         price: '165.00',
         desc: 'Warren truss triangulation efficiency study. Classic structural engineering.',
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
     's_dam': {
@@ -423,6 +371,7 @@ const productDatabase = {
         price: '240.00',
         desc: 'Hydrostatic pressure resistance engineering for massive water containment.',
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
     's_isolator': {
@@ -430,15 +379,17 @@ const productDatabase = {
         price: '295.00',
         desc: 'Base isolation bearing for earthquake resistance. Engineering for safety and motion.',
         series: 'Structural',
+        tier: 'signature',
         colors: ['#8c8c8c', '#4682B4', '#8B4513', '#1a1a1a']
     },
 
-    // AEROSPACE SERIES (Colors: White, Orbit Blue, Heat Shield Orange, Carbon)
+    // AEROSPACE SERIES (Signature)
     'a_falcon': {
         title: 'Falcon Trajectory',
         price: '260.00',
         desc: 'Orbital insertion path mathematics and velocity charts for heavy lift vehicles.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
     },
     'a_naca': {
@@ -446,6 +397,7 @@ const productDatabase = {
         price: '185.00',
         desc: 'Classic camber profiles emphasizing lift coefficients. The shape of flight.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
     },
     'a_nozzle': {
@@ -453,6 +405,7 @@ const productDatabase = {
         price: '230.00',
         desc: 'De Laval nozzle expansion ratio blueprint. Optimizing thrust in vacuum.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
     },
     'a_inlet': {
@@ -460,6 +413,7 @@ const productDatabase = {
         price: '310.00',
         desc: 'Supersonic shockwave management geometry. Mastering air at Mach 3.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
     },
     'a_heli': {
@@ -467,6 +421,7 @@ const productDatabase = {
         price: '275.00',
         desc: 'Cyclic and collective pitch mechanism details. Complexity in rotation.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
     },
     'a_station': {
@@ -474,6 +429,7 @@ const productDatabase = {
         price: '350.00',
         desc: 'Pressure vessel and docking port schematic. Living in the void.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
     },
     'a_solar': {
@@ -481,6 +437,7 @@ const productDatabase = {
         price: '210.00',
         desc: 'Deployment hinge and photovoltaic cell layout. Harvesting stellar energy.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
     },
     'a_lander': {
@@ -488,7 +445,75 @@ const productDatabase = {
         price: '295.00',
         desc: 'Lunar lander shock absorption leg design. Touching down on alien worlds.',
         series: 'Aerospace',
+        tier: 'signature',
         colors: ['#ffffff', '#000080', '#FF4500', '#222222']
+    },
+
+    // ESSENTIALS COLLECTION
+    // Everyday products for a reasonable price. 8 colors.
+    'e_grid': {
+        title: 'The Grid System',
+        price: '45.00',
+        desc: 'A minimal, versatile grid pattern ensuring perfect alignment in any modern space.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF']
+    },
+    'e_wave': {
+        title: 'Sine Wave Basic',
+        price: '40.00',
+        desc: 'Pure mathematical oscillation. A standard reference for audio and physics enthusiasts.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#1a1a1a', '#e5e5e5', '#3357ff', '#ff3357', '#33ff57', '#ffda33', '#33ffff', '#ff33ff']
+    },
+    'e_topo': {
+        title: 'Topographic Lines',
+        price: '50.00',
+        desc: 'Elevation contours map. Simple, organic lines representing terrain.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#2e2e2e', '#f0f0f0', '#4a90e2', '#e24a4a', '#50c878', '#f2c94c', '#9b51e0', '#f5a623']
+    },
+    'e_circuit': {
+        title: 'Basic PCB Trace',
+        price: '55.00',
+        desc: 'Fundamental electronic pathways. The copper roads of modern technology.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#1c2e1c', '#e6ffe6', '#008000', '#800000', '#000080', '#808000', '#800080', '#008080']
+    },
+    'e_bauhaus': {
+        title: 'Bauhaus Shapes',
+        price: '60.00',
+        desc: 'Primary geometric forms: Triangle, Square, Circle. The basics of design theory.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#111111', '#eeeeee', '#d43535', '#356dd4', '#d4a835', '#35d49a', '#9a35d4', '#d46d35']
+    },
+    'e_spectrum': {
+        title: 'Visible Spectrum',
+        price: '48.00',
+        desc: 'Linear gradient of visible light. Simple physics for your wall.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#000000', '#FFFFFF', '#666666', '#999999', '#CCCCCC', '#333333', '#555555', '#777777']
+    },
+    'e_iso': {
+        title: 'Isometric Cube',
+        price: '42.00',
+        desc: 'A perfect cube in 30-degree isometric projection. Depth on a flat plane.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#222222', '#dddddd', '#ff5722', '#2196f3', '#4caf50', '#ffeb3b', '#673ab7', '#e91e63']
+    },
+    'e_golden': {
+        title: 'Golden Spiral',
+        price: '65.00',
+        desc: 'Fibonacci sequence visualization. Nature\'s perfect proportion.',
+        series: 'Essentials',
+        tier: 'essentials',
+        colors: ['#0a0a0a', '#fdfdfd', '#d4af37', '#c0c0c0', '#cd7f32', '#b87333', '#50c878', '#0047ab']
     }
 };
 
@@ -508,17 +533,27 @@ function initProductPage() {
     document.getElementById('product-title').innerText = product.title;
     document.getElementById('product-price').innerText = '$' + product.price;
     document.getElementById('product-desc').innerText = product.desc;
-    
-    // Breadcrumb Category
-    const breadcrumbSpan = document.getElementById('category-crumb');
-    breadcrumbSpan.innerText = product.series;
-    
+
+    // Breadcrumb Category - HIDDEN AS PER FEEDBACK (Both Essentials and Signature)
+    const breadcrumbContainer = document.getElementById('product-breadcrumb');
+    if (breadcrumbContainer) {
+        breadcrumbContainer.style.display = 'none';
+    }
+
+    // -----------------------------------------------------
+    // TIER BADGE INSERTION REMOVED AS PER FEEDBACK
+    // -----------------------------------------------------
+    const existingBadge = document.getElementById('product-tier-badge');
+    if (existingBadge) existingBadge.remove();
+
+
     // Image Placeholder
     const mainImg = document.getElementById('product-main-image');
     mainImg.innerText = product.title; // Placeholder text
-    if(product.series === 'Kinetic') mainImg.style.background = 'radial-gradient(circle, #333, #000)';
-    if(product.series === 'Structural') mainImg.style.background = 'radial-gradient(circle, #2a2a2a, #111)';
-    if(product.series === 'Aerospace') mainImg.style.background = 'radial-gradient(circle, #1f1f1f, #050505)';
+    if (product.series === 'Kinetic') mainImg.style.background = 'radial-gradient(circle, #333, #000)';
+    if (product.series === 'Structural') mainImg.style.background = 'radial-gradient(circle, #2a2a2a, #111)';
+    if (product.series === 'Aerospace') mainImg.style.background = 'radial-gradient(circle, #1f1f1f, #050505)';
+    if (product.series === 'Essentials') mainImg.style.background = 'radial-gradient(circle, #444, #111)'; // Generic background for Essentials
 
     // Colors
     const colorSelector = document.getElementById('color-selector');
@@ -528,10 +563,10 @@ function initProductPage() {
         div.className = 'color-option';
         div.style.backgroundColor = color;
         if (index === 0) div.classList.add('active'); // Select first by default
-        
+
         div.addEventListener('click', () => {
-             document.querySelectorAll('.color-option').forEach(el => el.classList.remove('active'));
-             div.classList.add('active');
+            document.querySelectorAll('.color-option').forEach(el => el.classList.remove('active'));
+            div.classList.add('active');
         });
         colorSelector.appendChild(div);
     });
@@ -569,7 +604,7 @@ function saveCart(cart) {
 
 function addToCart(productId, color, qty) {
     const cart = getCart();
-    
+
     // Check if same product + color exists
     const existingIndex = cart.findIndex(item => item.id === productId && item.color === color);
 
@@ -587,7 +622,7 @@ function addToCart(productId, color, qty) {
 function updateCartCount() {
     const cart = getCart();
     const count = cart.reduce((acc, item) => acc + item.qty, 0);
-    
+
     // Update all count badges on the page
     document.querySelectorAll('#cart-count, #mobile-cart-count').forEach(el => {
         el.innerText = count;
@@ -604,7 +639,7 @@ function removeFromCart(index) {
 function updateCartItemQty(index, change) {
     const cart = getCart();
     const newQty = cart[index].qty + change;
-    
+
     if (newQty > 0 && newQty <= 10) {
         cart[index].qty = newQty;
         saveCart(cart);
@@ -615,7 +650,7 @@ function updateCartItemQty(index, change) {
 // Render Cart Page
 function initCartPage() {
     updateCartCount();
-    
+
     const cart = getCart();
     const listEl = document.getElementById('cart-items-list');
     const emptyEl = document.getElementById('cart-empty-state');
@@ -632,7 +667,7 @@ function initCartPage() {
 
     emptyEl.style.display = 'none';
     contentEl.style.display = 'block';
-    
+
     listEl.innerHTML = '';
     let total = 0;
 
@@ -645,7 +680,7 @@ function initCartPage() {
 
         const row = document.createElement('div');
         row.className = 'cart-item-row';
-        
+
         row.innerHTML = `
             <div class="cart-thumb" style="background-color: #222;"></div> 
             <div class="cart-details">
@@ -662,7 +697,7 @@ function initCartPage() {
             <div class="cart-price">$${itemTotal.toFixed(2)}</div>
             <button class="btn-remove" onclick="removeFromCart(${index})">&times;</button>
         `;
-        
+
         listEl.appendChild(row);
     });
 
